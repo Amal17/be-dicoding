@@ -18,7 +18,6 @@ const BcryptPasswordHash = require('./security/BcryptPasswordHash');
 
 // use case
 const AddUserUseCase = require('../Applications/use_case/AddUserUseCase');
-const AddThreadUseCase = require('../Applications/use_case/AddThreadUseCase');
 const AuthenticationTokenManager = require('../Applications/security/AuthenticationTokenManager');
 const JwtTokenManager = require('./security/JwtTokenManager');
 const LoginUserUseCase = require('../Applications/use_case/LoginUserUseCase');
@@ -26,6 +25,8 @@ const AuthenticationRepository = require('../Domains/authentications/Authenticat
 const AuthenticationRepositoryPostgres = require('./repository/AuthenticationRepositoryPostgres');
 const LogoutUserUseCase = require('../Applications/use_case/LogoutUserUseCase');
 const RefreshAuthenticationUseCase = require('../Applications/use_case/RefreshAuthenticationUseCase');
+const AddThreadUseCase = require('../Applications/use_case/AddThreadUseCase');
+const AddCommentUseCase = require('../Applications/use_case/AddCommentUseCase');
 
 // creating container
 const container = createContainer();
@@ -115,19 +116,6 @@ container.register([
     },
   },
   {
-    key: AddThreadUseCase.name,
-    Class: AddThreadUseCase,
-    parameter: {
-      injectType: 'destructuring',
-      dependencies: [
-        {
-          name: 'threadRepository',
-          internal: ThreadRepository.name,
-        }
-      ],
-    },
-  },
-  {
     key: LoginUserUseCase.name,
     Class: LoginUserUseCase,
     parameter: {
@@ -179,6 +167,32 @@ container.register([
           name: 'authenticationTokenManager',
           internal: AuthenticationTokenManager.name,
         },
+      ],
+    },
+  },
+  {
+    key: AddThreadUseCase.name,
+    Class: AddThreadUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {
+          name: 'threadRepository',
+          internal: ThreadRepository.name,
+        }
+      ],
+    },
+  },
+  {
+    key: AddCommentUseCase.name,
+    Class: AddCommentUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {
+          name: 'threadRepository',
+          internal: ThreadRepository.name,
+        }
       ],
     },
   },
