@@ -52,6 +52,33 @@ class ThreadRepositoryPostgres extends ThreadRepository {
 
     return new AddedComment({ ...result.rows[0] });
   }
+
+  async getCommentById(idComment) {
+    const query = {
+      text: 'SELECT * FROM comments WHERE id = $1',
+      values: [idComment],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (result.rows.length === 0) {
+      throw new NotFoundError('comment tidak ditemukan di database');
+    }
+
+    return result.rows[0]
+  }
+
+  async deleteCommentById(idComment) {
+    const query = {
+      text: 'UPDATE comments SET is_deleted = true WHERE id = $1 RETURNING id',
+      values: [idComment]
+    }
+    const result = await this._pool.query(query)
+
+    if (!result.rowCount) {
+      throw new NotFoundError('Gagal memperbarui hapus komentar. Id tidak ditemukan')
+    }
+  }
 }
 
 module.exports = ThreadRepositoryPostgres;

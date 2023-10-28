@@ -22,8 +22,6 @@ DomainErrorTranslator._directories = {
   'ADD_THREAD.USER_ID_EMPTY': new InvariantError('user id kosong'),
   'ADD_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('tidak dapat membuat komentar baru karena tipe data tidak sesuai'),
   'ADD_COMMENT.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('tidak dapat membuat komentar baru karena properti yang dibutuhkan tidak ada')
-
-  
 };
 
 module.exports = DomainErrorTranslator;
