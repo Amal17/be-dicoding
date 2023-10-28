@@ -10,9 +10,9 @@ const createServer = async (container) => {
   const server = Hapi.server({
     host: process.env.HOST,
     port: process.env.PORT,
-    debug: {
-      request: ['error'] 
-    }
+    // debug: {
+    //   request: ['error'] 
+    // }
   });
 
   await server.register([

@@ -27,8 +27,14 @@ describe('/threads endpoint', () => {
         method: 'POST',
         url: '/threads',
         payload: requestPayload,
-        artifacts: {
-          id: 'user-123'
+        auth: {
+          credentials: {
+            id: 'user-123'
+          },
+          strategy: "jwt",
+          artifacts: {
+            id: 'user-123'
+          }
         }
       });
 
@@ -52,8 +58,12 @@ describe('/threads endpoint', () => {
         method: 'POST',
         url: '/threads',
         payload: requestPayload,
-        artifacts: {
-          id: 'user-123'
+        auth: {
+          credentials: {},
+          strategy: "jwt",
+          artifacts: {
+            id: 'user-123'
+          }
         }
       });
 
@@ -77,8 +87,12 @@ describe('/threads endpoint', () => {
         method: 'POST',
         url: '/threads',
         payload: requestPayload,
-        artifacts: {
-          id: 'user-123'
+        auth: {
+          credentials: {},
+          strategy: "jwt",
+          artifacts: {
+            id: 'user-123'
+          }
         }
       });
 

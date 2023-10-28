@@ -1,18 +1,11 @@
 class AddThread {
-  constructor(userId, payload) {
-    this._verifyUser(userId);
+  constructor(payload) {
     this._verifyPayload(payload);
 
     const { title, body } = payload;
 
     this.title = title;
     this.body = body;
-  }
-
-  _verifyUser(userId) {
-    if (!userId) {
-      throw new Error('ADD_THREAD.USER_ID_EMPTY');
-    }
   }
 
   _verifyPayload({ title, body }) {

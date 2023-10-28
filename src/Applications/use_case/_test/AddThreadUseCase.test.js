@@ -43,9 +43,6 @@ describe('AddUserUseCase', () => {
       owner: userId,
     }));
 
-    expect(mockThreadRepository.addThread).toBeCalledWith(new AddThread(userId, {
-      title: useCasePayload.title,
-      body: useCasePayload.body,
-    }));
+    expect(mockThreadRepository.addThread).toBeCalledWith(userId, new AddThread(useCasePayload))
   });
 });

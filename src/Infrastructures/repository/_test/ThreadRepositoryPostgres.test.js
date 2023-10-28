@@ -17,7 +17,7 @@ describe('ThreadRepositoryPostgres', () => {
     it('should persist new thread and return added thread correctly', async () => {
       // Arrange
       const idUser = 'user-123'
-      const addThread = new AddThread(idUser, {
+      const addThread = new AddThread({
         title: 'A Thread',
         body: 'Thread body',
       });
@@ -35,7 +35,7 @@ describe('ThreadRepositoryPostgres', () => {
     it('should return added thread correctly', async () => {
       // Arrange
       const idUser = 'user-123'
-      const addThread = new AddThread(idUser, {
+      const addThread = new AddThread({
         title: 'A Thread',
         body: 'Thread body',
       });
