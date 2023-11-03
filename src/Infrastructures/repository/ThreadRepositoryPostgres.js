@@ -79,6 +79,29 @@ class ThreadRepositoryPostgres extends ThreadRepository {
       throw new NotFoundError('Gagal memperbarui hapus komentar. Id tidak ditemukan')
     }
   }
+
+  async getThreadWithComment(idThread) {
+    const query = {
+      text: 'SELECT threads.id, title, body, created_at as date, username FROM threads, users WHERE threads.id = $1 and users.id = owner',
+      values: [idThread]
+    }
+    const result = await this._pool.query(query)
+
+    if (!result.rowCount) {
+      throw new NotFoundError('Thread tidak ditemukan')
+    }
+
+    const thread = result.rows[0]
+
+    const query2 = {
+      text: 'SELECT comments.id, username, created_at as date, CASE WHEN is_deleted THEN \'**komentar telah dihapus**\' ELSE content  END as content FROM comments, users WHERE "idThread" = $1 and users.id = owner ORDER BY date ASC',
+      values: [idThread]
+    }
+    const comments = await this._pool.query(query2)
+
+    thread.comments = comments.rows
+    return thread
+  }
 }
 
 module.exports = ThreadRepositoryPostgres;
