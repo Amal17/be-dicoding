@@ -1,5 +1,6 @@
 const pool = require('../../database/postgres/pool');
 const ThreadsTableTestHelper = require('../../../../tests/ThreadsTableTestHelper');
+const UsersTableTestHelper = require('../../../../tests/UsersTableTestHelper')
 const container = require('../../container');
 const createServer = require('../createServer');
 
@@ -10,6 +11,7 @@ describe('/threads endpoint', () => {
 
   afterEach(async () => {
     await ThreadsTableTestHelper.cleanTable();
+    await UsersTableTestHelper.cleanTable();
   });
 
   describe('when POST /threads', () => {
@@ -101,6 +103,60 @@ describe('/threads endpoint', () => {
       expect(response.statusCode).toEqual(400);
       expect(responseJson.status).toEqual('fail');
       expect(responseJson.message).toEqual('tidak dapat membuat threads baru karena tipe data tidak sesuai');
+    });
+  });
+
+  describe('when GET /threads/{threadId}', () => {
+    it('should response 404 when invalid thread Id', async () => {
+      // Arrange
+      const threadId = 'thread-123' 
+
+      const server = await createServer(container);
+
+      // Action
+      const response = await server.inject({
+        method: 'GET',
+        url: `/threads/${threadId}`
+      });
+
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(404);
+      expect(responseJson.status).toEqual('fail');
+      expect(responseJson.message).toEqual('Thread tidak ditemukan');
+    });
+
+    it('should response 200', async () => {
+      // Arrange
+      const threadId = 'thread-123' 
+
+      // Add User
+      await UsersTableTestHelper.addUser({
+        id: 'user-123',
+        username: 'UserSaya'
+      })
+
+      // Add Thread
+      await ThreadsTableTestHelper.addThread({
+          id: threadId, 
+          title: 'A thread', 
+          body: 'the body thread', 
+          owner: 'user-123'
+      })
+
+      const server = await createServer(container);
+
+      // Action
+      const response = await server.inject({
+        method: 'GET',
+        url: `/threads/${threadId}`
+      });
+
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(200);
+      expect(responseJson.status).toEqual('success');
+      expect(responseJson.data).toBeDefined();
     });
   });
 });
