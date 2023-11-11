@@ -1,6 +1,6 @@
 const NotFoundError = require('../../Commons/exceptions/NotFoundError')
 const CommentRepository = require('../../Domains/comment/CommentRepository');
-const AddedComment = require('../../Domains/thread/entities/AddedComment');
+const AddedComment = require('../../Domains/comment/entities/AddedComment');
 
 class CommentRepositoryPostgres extends CommentRepository {
   constructor(pool, idGenerator) {
@@ -35,7 +35,7 @@ class CommentRepositoryPostgres extends CommentRepository {
       throw new NotFoundError('comment tidak ditemukan di database');
     }
 
-    return result.rows[0]
+    return new AddedComment({ ...result.rows[0] });
   }
 
   async deleteCommentById(idComment) {

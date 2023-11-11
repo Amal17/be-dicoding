@@ -7,13 +7,13 @@ const CommentsTableTestHelper = {
   }) {
     const query = {
       text: 'INSERT INTO comments VALUES($1, $2, $3, $4)',
-      values: [id, title, body, owner],
+      values: [id, idThread, content, owner],
     };
 
     await pool.query(query);
   },
 
-  async findThreadById(id) {
+  async findCommentById(id) {
     const query = {
       text: 'SELECT * FROM comments WHERE id = $1',
       values: [id],
