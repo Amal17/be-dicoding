@@ -16,11 +16,14 @@ exports.up = (pgm) => {
       owner: {
         type: 'VARCHAR(50)',
         notNull: true,
+        references: 'users(id)',
+        onDelete: 'CASCADE',
       },
     });
   };
   
   exports.down = (pgm) => {
+    // pgm.dropConstraint('owner_user');
     pgm.dropTable('threads');
   };
   

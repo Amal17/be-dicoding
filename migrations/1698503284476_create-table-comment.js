@@ -8,6 +8,8 @@ exports.up = (pgm) => {
       idThread: {
         type: 'VARCHAR(50)',
         notNull: true,
+        references: 'threads(id)',
+        onDelete: 'CASCADE',
       },
       content: {
         type: 'TEXT',
@@ -16,6 +18,8 @@ exports.up = (pgm) => {
       owner: {
         type: 'VARCHAR(50)',
         notNull: true,
+        references: 'users(id)',
+        onDelete: 'CASCADE',
       },
     });
 };
