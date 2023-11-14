@@ -52,7 +52,7 @@ class ThreadRepositoryPostgres extends ThreadRepository {
     const thread = result.rows[0]
 
     const query2 = {
-      text: 'SELECT comments.id, username, created_at as date, CASE WHEN is_deleted THEN \'**komentar telah dihapus**\' ELSE content  END as content FROM comments, users WHERE "idThread" = $1 and users.id = owner ORDER BY date ASC',
+      text: 'SELECT comments.id, username, created_at as date, CASE WHEN is_deleted THEN \'**komentar telah dihapus**\' ELSE content  END as content FROM comments, users WHERE thread_id = $1 and users.id = owner ORDER BY date ASC',
       values: [idThread]
     }
     const comments = await this._pool.query(query2)

@@ -17,13 +17,18 @@ exports.up = (pgm) => {
         type: 'VARCHAR(50)',
         notNull: true,
         references: 'users(id)',
-        onDelete: 'CASCADE',
       },
     });
+
+    pgm.addConstraint(
+      'threads', 
+      'fk_threads.owner_users.id', 
+      'FOREIGN KEY(owner) REFERENCES users(id) ON DELETE CASCADE');
+    pgm.createIndex('threads', 'owner');
   };
   
   exports.down = (pgm) => {
-    // pgm.dropConstraint('owner_user');
+    pgm.dropConstraint('threads', 'fk_threads.owner_users.id');
     pgm.dropTable('threads');
   };
   
