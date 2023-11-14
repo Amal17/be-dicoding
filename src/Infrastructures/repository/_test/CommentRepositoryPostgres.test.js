@@ -7,7 +7,7 @@ const AddedComment = require('../../../Domains/comment/entities/AddedComment')
 const pool = require('../../database/postgres/pool');
 const CommentRepositoryPostgres = require('../CommentRepositoryPostgres')
 
-describe('CommentRepositoryPostgres', () => {
+describe('CommentRepositoryPostgres ', () => {
   afterEach(async () => {
     await ThreadsTableTestHelper.cleanTable();
     await CommentTableTestHelper.cleanTable();
@@ -23,6 +23,8 @@ describe('CommentRepositoryPostgres', () => {
       // Arrange
       const idUser = 'user-123'
       const idThread = 'thread-123'
+      await UsersTableTestHelper.addUser({id: idUser})
+      await ThreadsTableTestHelper.addThread({id: idThread, owner: idUser})
       const addComment = new AddComment(idUser, idThread, {
         content: 'A Comment of Thread',
       });
@@ -41,6 +43,8 @@ describe('CommentRepositoryPostgres', () => {
       // Arrange
       const idUser = 'user-123'
       const idThread = 'thread-123'
+      await UsersTableTestHelper.addUser({id: idUser})
+      await ThreadsTableTestHelper.addThread({id: idThread, owner: idUser})
       const addComment = new AddComment(idUser, idThread, {
         content: 'A Comment of Thread',
       });
@@ -76,12 +80,8 @@ describe('CommentRepositoryPostgres', () => {
       const idComment = 'comment-123'
       const idThread = 'thread-123'
 
-    //   ThreadsTableTestHelper.addThread({
-    //             id: idThread, 
-    //             title: 'A thread', 
-    //             body: 'The thread body', 
-    //             owner: idUser
-    //         })
+      await UsersTableTestHelper.addUser({id: idUser})
+      await ThreadsTableTestHelper.addThread({id: idThread, owner: idUser})
       CommentTableTestHelper.addComment({
                 id:idComment, 
                 idThread:idThread, 
@@ -118,14 +118,18 @@ describe('CommentRepositoryPostgres', () => {
 
     it('should delete correct thread', async () => {
       // Arrange
+      const idUser = 'user-123';
+      const idThread = 'thread-123';
       const fakeIdGenerator = () => '123'; // stub!
       const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, fakeIdGenerator)
       const idComment = 'comment-123'
       const notDeleteId = 'comment-234'
 
       // Action
-      CommentTableTestHelper.addComment({id: idComment, idThread: 'thread-123', content: 'Sebuah komentar', owner: 'user-234'})
-      CommentTableTestHelper.addComment({id: notDeleteId, idThread: 'thread-123', content: 'Sebuah komentar kedua', owner: 'user-234'})
+      await UsersTableTestHelper.addUser({id: idUser})
+      await ThreadsTableTestHelper.addThread({id: idThread, owner: idUser})
+      await CommentTableTestHelper.addComment({id: idComment, idThread, content: 'Sebuah komentar', owner: idUser})
+      await CommentTableTestHelper.addComment({id: notDeleteId, idThread, content: 'Sebuah komentar kedua', owner: idUser})
       
       await commentRepositoryPostgres.deleteCommentById(idComment)
 

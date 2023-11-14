@@ -7,7 +7,7 @@ const AddedThread = require('../../../Domains/thread/entities/AddedThread');
 const pool = require('../../database/postgres/pool');
 const ThreadRepositoryPostgres = require('../ThreadRepositoryPostgres');
 
-describe('ThreadRepositoryPostgres', () => {
+describe('ThreadRepositoryPostgres ', () => {
   afterEach(async () => {
     await ThreadsTableTestHelper.cleanTable();
     await CommentTableTestHelper.cleanTable();
@@ -30,6 +30,7 @@ describe('ThreadRepositoryPostgres', () => {
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, fakeIdGenerator);
 
       // Action
+      await UsersTableTestHelper.addUser({id: idUser})
       await threadRepositoryPostgres.addThread(idUser, addThread);
 
       // Assert
@@ -48,6 +49,7 @@ describe('ThreadRepositoryPostgres', () => {
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, fakeIdGenerator);
 
       // Action
+      await UsersTableTestHelper.addUser({id: idUser})
       const addedThread = await threadRepositoryPostgres.addThread(idUser, addThread);
 
       // Assert
@@ -81,6 +83,7 @@ describe('ThreadRepositoryPostgres', () => {
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, fakeIdGenerator);
 
       // Action
+      await UsersTableTestHelper.addUser({id: idUser})
       const addedThread = await threadRepositoryPostgres.addThread(idUser, addThread);
       const getThread = await threadRepositoryPostgres.getThreadById(addedThread.id)
 
@@ -110,14 +113,14 @@ describe('ThreadRepositoryPostgres', () => {
       const fakeIdGenerator = () => '123'; // stub!
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, fakeIdGenerator)
       const idThread = 'thread-123'
-
-
-      // Action
-      UsersTableTestHelper.addUser({id: 'user-123', username: 'usernameSaya'})
-      UsersTableTestHelper.addUser({id: 'user-234', username: 'tukangKomentar'})
-      ThreadsTableTestHelper.addThread({id: idThread, title: 'A thread', body: 'The thread body', owner: 'user-123'})
-      CommentTableTestHelper.addComment({id: 'comment-123', idThread, content: 'Sebuah komentar', owner: 'user-234'})
       
+      await UsersTableTestHelper.addUser({id: 'user-123', username: 'usernameSaya'})
+      await UsersTableTestHelper.addUser({id: 'user-234', username: 'tukangKomentar'})
+      await ThreadsTableTestHelper.addThread({id: idThread, title: 'A thread', body: 'The thread body', owner: 'user-123'})
+      await CommentTableTestHelper.addComment({id: 'comment-123', idThread, content: 'Sebuah komentar', owner: 'user-234'})
+
+
+      // Action      
       const getThread = await threadRepositoryPostgres.getThreadWithComment(idThread)
 
       // Assert

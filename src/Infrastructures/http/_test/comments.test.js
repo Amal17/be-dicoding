@@ -1,6 +1,7 @@
 const pool = require('../../database/postgres/pool');
 const CommentsTableTestHelper = require('../../../../tests/CommentsTableTestHelper');
 const ThreadsTableTestHelper = require('../../../../tests/ThreadsTableTestHelper');
+const UsersTableTestHelper = require('../../../../tests/UsersTableTestHelper')
 const container = require('../../container');
 const createServer = require('../createServer');
 
@@ -10,11 +11,12 @@ describe('/threads/{id}/comments endpoint', () => {
   });
 
   afterEach(async () => {
+    await CommentsTableTestHelper.cleanTable();   
     await ThreadsTableTestHelper.cleanTable();
-    await CommentsTableTestHelper.cleanTable();    
+    await UsersTableTestHelper.cleanTable(); 
   });
 
-  describe('when POST /threads/{threadId}/comments', () => {
+  describe('when POST /threads/{threadId}/comments ', () => {
     it('should response 400 when request payload not contain needed property', async () => {
       // Arrange
       const threadId = 'thread-123'
@@ -115,8 +117,9 @@ describe('/threads/{id}/comments endpoint', () => {
     it('should response 201 and persisted comment', async () => {
         // Arrange
         const threadId = 'thread-123'
+        await UsersTableTestHelper.addUser({id: 'user-123', username: 'newUser', password: 'pass', fullname: 'Full Name'})
         await ThreadsTableTestHelper.addThread({id: threadId, title: 'A thread', body: 'the body thread', owner: 'user-123'})
-  
+
         const requestPayload = {
           content: 'A Thread Comment',
         };
@@ -155,8 +158,9 @@ describe('/threads/{threadId}/comments/{commentId} endpoint', () => {
     });
   
     afterEach(async () => {
-      await ThreadsTableTestHelper.cleanTable();
       await CommentsTableTestHelper.cleanTable();
+      await ThreadsTableTestHelper.cleanTable();
+      await UsersTableTestHelper.cleanTable(); 
     });
   
     describe('when DELETE /threads/{threadId}/comments/{commentId}', () => {
@@ -191,10 +195,12 @@ describe('/threads/{threadId}/comments/{commentId} endpoint', () => {
 
         it('should response 404 when invalid comment id', async () => {
           // Arrange
+          const userId = 'user-123'
           const threadId = 'thread-123'
           const commentId = 'comment-123'
 
-          await ThreadsTableTestHelper.addThread({id: threadId, title: 'A thread', body: 'the body thread', owner: 'user-123'})
+          await UsersTableTestHelper.addUser({id: userId})
+          await ThreadsTableTestHelper.addThread({id: threadId, title: 'A thread', body: 'the body thread', owner: userId})
 
           const server = await createServer(container);
     
@@ -224,13 +230,19 @@ describe('/threads/{threadId}/comments/{commentId} endpoint', () => {
             // Arrange
             const threadId = 'thread-123'
             const commentId = 'comment-123'
-            const userId = 'user-1234'
+            const userId = 'user-123'
 
+            await UsersTableTestHelper.addUser({
+                id: userId,
+                username: 'newUser',
+                password: 'pass',
+                fullname: 'Full Name'
+            })
             await ThreadsTableTestHelper.addThread({
                 id: threadId, 
                 title: 'A thread', 
                 body: 'the body thread', 
-                owner: 'user-123'
+                owner: userId
             })
             await CommentsTableTestHelper.addComment({
                 id: commentId,
@@ -247,11 +259,11 @@ describe('/threads/{threadId}/comments/{commentId} endpoint', () => {
                 url: `/threads/${threadId}/comments/${commentId}`,
                 auth: {
                 credentials: {
-                    id: 'user-123'
+                    id: 'user-234'
                 },
                 strategy: "jwt",
                 artifacts: {
-                    id: 'user-123'
+                    id: 'user-234'
                 }
                 }
             });
@@ -269,6 +281,11 @@ describe('/threads/{threadId}/comments/{commentId} endpoint', () => {
             const threadId = 'thread-123'
             const commentId = 'comment-123'
             const userId = 'user-123'
+
+            // Add User
+            await UsersTableTestHelper.addUser({
+                id: userId, 
+            })
 
             // Add Thread
             await ThreadsTableTestHelper.addThread({

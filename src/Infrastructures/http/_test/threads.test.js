@@ -21,6 +21,8 @@ describe('/threads endpoint', () => {
         title: 'A Thread',
         body: 'Thread body',
       };
+
+      await UsersTableTestHelper.addUser({id: 'user-123'})
       // eslint-disable-next-line no-undef
       const server = await createServer(container);
 
