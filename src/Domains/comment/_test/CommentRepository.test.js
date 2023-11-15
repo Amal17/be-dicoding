@@ -9,5 +9,6 @@ describe('CommentRepository interface', () => {
         await expect(commentRepository.addComment('idUser', 'idThread', {})).rejects.toThrowError('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED')
         await expect(commentRepository.getCommentById('idComment')).rejects.toThrowError('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED')
         await expect(commentRepository.deleteCommentById('idComment')).rejects.toThrowError('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED')
+        await expect(commentRepository.getCommentsByThread('idThread')).rejects.toThrowError('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED')
     })
 })

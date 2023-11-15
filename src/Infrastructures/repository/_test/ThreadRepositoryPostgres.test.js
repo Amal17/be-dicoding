@@ -97,40 +97,4 @@ describe('ThreadRepositoryPostgres ', () => {
     })
   })
 
-  describe('getThreadWithComment function', () => {
-    it('should throw NotFoundError if incorrect id', async () => {
-      // Arrange
-      const fakeIdGenerator = () => '123'
-      const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, fakeIdGenerator)
-      const idThread = 'thread-123'
-
-      // Action and Assert
-      await expect(threadRepositoryPostgres.getThreadWithComment(idThread)).rejects.toThrowError(NotFoundError)
-    })
-
-    it('should return correct thread', async () => {
-      // Arrange
-      const fakeIdGenerator = () => '123'; // stub!
-      const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, fakeIdGenerator)
-      const idThread = 'thread-123'
-      
-      await UsersTableTestHelper.addUser({id: 'user-123', username: 'usernameSaya'})
-      await UsersTableTestHelper.addUser({id: 'user-234', username: 'tukangKomentar'})
-      await ThreadsTableTestHelper.addThread({id: idThread, title: 'A thread', body: 'The thread body', owner: 'user-123'})
-      await CommentTableTestHelper.addComment({id: 'comment-123', idThread, content: 'Sebuah komentar', owner: 'user-234'})
-
-
-      // Action      
-      const getThread = await threadRepositoryPostgres.getThreadWithComment(idThread)
-
-      // Assert
-      expect(getThread).toHaveProperty('id')
-      expect(getThread).toHaveProperty('title')
-      expect(getThread).toHaveProperty('body')
-      expect(getThread).toHaveProperty('date')
-      expect(getThread).toHaveProperty('username')
-      expect(getThread).toHaveProperty('comments')
-      expect(getThread.comments).toHaveLength(1)
-    })
-  })
 });

@@ -1,4 +1,6 @@
 const ThreadRepository = require('../../../Domains/thread/ThreadRepository');
+const CommentRepository = require('../../../Domains/comment/CommentRepository');
+const AddedThread = require('../../../Domains/thread/entities/AddedThread')
 const GetThreadUseCase = require('../GetThreadUseCase');
 
 describe('GetThreadUseCase', () => {
@@ -11,14 +13,32 @@ describe('GetThreadUseCase', () => {
 
     /** creating dependency of use case */
     const mockThreadRepository = new ThreadRepository();
+    const mockCommentRepository = new CommentRepository();
+
+
+    // const thread = await this._threadRepository.getThreadById(threadId);
+    // let comments = await this._commentRepository.getCommentsByThread(threadId);
 
     /** mocking needed function */
-    mockThreadRepository.getThreadWithComment = jest.fn()
-      .mockImplementation(() => Promise.resolve({}));
+    mockThreadRepository.getThreadById = jest.fn()
+      .mockImplementation(
+        () => Promise.resolve(
+              new AddedThread({ 
+                id: 'thread-123', 
+                title: 'A title', 
+                owner: 'user-123' 
+              })
+          )
+      );
+    
+    mockCommentRepository.getCommentsByThread = jest.fn()
+      .mockImplementation(() => Promise.resolve([]))
+
 
     /** creating use case instance */
     const getThreadUseCase = new GetThreadUseCase({
       threadRepository: mockThreadRepository,
+      commentRepository: mockCommentRepository
     });
 
     // Action
@@ -27,6 +47,7 @@ describe('GetThreadUseCase', () => {
     // Assert
     expect(getThread).toBeDefined()
 
-    expect(mockThreadRepository.getThreadWithComment).toBeCalledWith(threadId)
+    expect(mockThreadRepository.getThreadById).toBeCalledWith(threadId)
+    expect(mockCommentRepository.getCommentsByThread).toBeCalledWith(threadId)
   });
 });

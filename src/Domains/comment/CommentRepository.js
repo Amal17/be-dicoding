@@ -10,6 +10,10 @@ class CommentRepository {
   async deleteCommentById(idComment) {
     throw new Error('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   }
+
+  async getCommentsByThread(idThread) {
+    throw new Error('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED');
+  }
 }
   
 module.exports = CommentRepository;

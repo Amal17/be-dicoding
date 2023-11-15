@@ -8,6 +8,5 @@ describe('ThreadRepository interface', () => {
     // Action and Assert
     await expect(threadRepository.addThread('idUser', {})).rejects.toThrowError('THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED');
     await expect(threadRepository.getThreadById('idThread')).rejects.toThrowError('THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED');
-    await expect(threadRepository.getThreadWithComment('idThread')).rejects.toThrowError('THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   });
 });
