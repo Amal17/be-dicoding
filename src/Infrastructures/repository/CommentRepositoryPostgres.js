@@ -49,6 +49,21 @@ class CommentRepositoryPostgres extends CommentRepository {
       throw new NotFoundError('Gagal memperbarui hapus komentar. Id tidak ditemukan')
     }
   }
+
+  async getCommentsByThread(idThread) {
+    const query = {
+      text: `SELECT comments.*, users.username
+              FROM comments INNER JOIN users
+                ON comments.owner = users.id
+              WHERE comments.thread_id = $1
+              ORDER BY comments.created_at ASC`,
+      values: [idThread],
+    };
+
+    const result = await this._pool.query(query);
+
+    return result.rows;
+  }
 }
 
 module.exports = CommentRepositoryPostgres;

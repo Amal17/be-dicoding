@@ -1,12 +1,28 @@
 // const AddThread = require('../../Domains/thread/entities/AddThread')
 
 class GetThreadUseCase {
-  constructor({ threadRepository }) {
+  constructor({ threadRepository, commentRepository }) {
     this._threadRepository = threadRepository;
+    this._commentRepository = commentRepository;
   }
 
   async execute(threadId) {
-    return this._threadRepository.getThreadWithComment(threadId);
+    const thread = await this._threadRepository.getThreadById(threadId);
+    let comments = await this._commentRepository.getCommentsByThread(threadId);
+
+    comments = comments.map((comment) => ({
+      id: comment.id,
+      username: comment.username,
+      date: comment.created_at,
+      content: comment.is_deleted
+        ? '**komentar telah dihapus**'
+        : comment.content,
+    }));
+
+    return {
+      ...thread,
+      comments,
+    };
   }
 }
 
