@@ -83,17 +83,16 @@ describe('ThreadRepositoryPostgres ', () => {
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, fakeIdGenerator);
 
       // Action
-      await UsersTableTestHelper.addUser({id: idUser})
+      await UsersTableTestHelper.addUser({id: idUser, username: 'newUser'})
       const addedThread = await threadRepositoryPostgres.addThread(idUser, addThread);
       const getThread = await threadRepositoryPostgres.getThreadById(addedThread.id)
 
       // Assert
-      expect(getThread).toStrictEqual(new AddedThread({
-        id: 'thread-123',
-        title: 'A Thread',
-        owner: 'user-123',
-      }));
-
+      expect(getThread.id).toStrictEqual('thread-123');
+      expect(getThread.title).toStrictEqual(addThread.title);
+      expect(getThread.body).toStrictEqual(addThread.body);
+      expect(getThread.username).toStrictEqual('newUser');
+      expect(getThread.date).not.toBeNull();
     })
   })
 

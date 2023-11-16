@@ -25,7 +25,7 @@ class ThreadRepositoryPostgres extends ThreadRepository {
 
   async getThreadById(idThread) {
     const query = {
-      text: 'SELECT * FROM threads WHERE id = $1',
+      text: 'SELECT threads.*, username FROM threads, users WHERE threads.id = $1 AND threads.owner = users.id',
       values: [idThread],
     };
 
@@ -35,7 +35,7 @@ class ThreadRepositoryPostgres extends ThreadRepository {
       throw new NotFoundError('thread tidak ditemukan di database');
     }
 
-    return new AddedThread({ ...result.rows[0] });
+    return result.rows[0];
   }
 
 }

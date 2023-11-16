@@ -20,7 +20,11 @@ class GetThreadUseCase {
     }));
 
     return {
-      ...thread,
+      id: thread.id,
+      title: thread.title,
+      body: thread.body,
+      date: thread.created_at,
+      username: thread.username,
       comments,
     };
   }
